@@ -8,18 +8,23 @@ namespace SmartCafe.EventHub.Receivers.Direct
 {
     class Program
     {
-        const string eventHubConnectionString = "Endpoint=sb://smartcafeeh-ns.servicebus.windows.net/;SharedAccessKeyName=SendAndListenPolicy;SharedAccessKey=EMZmvA3HQzK7vSltYr5MWG2DQ5ZNbIYibW5mFduanpY=;EntityPath=smartcafeeh";
+        //const string eventHubConnectionString = "Endpoint=sb://smartcafeeh-ns.servicebus.windows.net/;SharedAccessKeyName=SendAndListenPolicy;SharedAccessKey=EMZmvA3HQzK7vSltYr5MWG2DQ5ZNbIYibW5mFduanpY=;EntityPath=smartcafeeh";
+        const string eventHubConnectionString = "Endpoint=sb://smartcafeeh-ns.servicebus.windows.net/;SharedAccessKeyName=SendAndListenPolicy;SharedAccessKey=CAKwW3/P/G/GIHib7XBhZ7mByY5TJ6ZX9Es0K+T4RAI=;EntityPath=smartcafealerteh";
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Connecting to the Event Hub...");
+            //Console.WriteLine("Connecting to the Event Hub...");
+            Console.WriteLine("Connecting to the Alert Event Hub...");
             var eventHubClient =
                 EventHubClient.CreateFromConnectionString(eventHubConnectionString);
 
             //var partitionReceiver = eventHubClient.CreateReceiver("$Default", "0", DateTime.Now);
 
             var runtimeInformation = await eventHubClient.GetRuntimeInformationAsync();
+            //var partitionReceivers = runtimeInformation.PartitionIds.Select(
+            //        partitionId => eventHubClient.CreateReceiver("smartcafe_console_direct", partitionId, DateTime.Now)
+            //    ).ToList();
             var partitionReceivers = runtimeInformation.PartitionIds.Select(
-                    partitionId => eventHubClient.CreateReceiver("smartcafe_console_direct", partitionId, DateTime.Now)
+                    partitionId => eventHubClient.CreateReceiver("$Default", partitionId, DateTime.Now)
                 ).ToList();
 
             Console.WriteLine("Waiting for incoming events...");
